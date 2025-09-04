@@ -81,7 +81,7 @@ export default function SignUpCard() {
   }
 
   return (
-    <Card className="w-full max-w-md m-auto">
+    <Card className="w-full max-w-md m-5">
       <CardHeader>
         <CardTitle>Sign Up</CardTitle>
         <CardDescription>Create your account with email, password, and OTP.</CardDescription>

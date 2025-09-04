@@ -14,7 +14,7 @@ import Link from "next/link"
 
 export function DataCard() {
   return (
-    <Card className="w-full max-w-sm m-auto">
+    <Card className="w-full max-w-sm m-5">
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>

@@ -4,6 +4,7 @@ import * as React from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Loader2 } from "lucide-react"
+import { FaInstagram } from "react-icons/fa"
 
 /**
  * InstagramLoginCard
@@ -108,8 +109,9 @@ export default function InstagramLoginCard({
   }
 
   return (
-    <Card className="w-full max-w-md m-auto">
+    <Card className="w-full max-w-md m-5">
       <CardHeader>
+        <CardTitle className="m-auto scale-200 p-2"><FaInstagram /></CardTitle>
         <CardTitle className="text-center p-4">Connect Instagram</CardTitle>
         <CardDescription className="text-center p-2">
           Grant access to your Instagram account by signing in.
