@@ -11,10 +11,8 @@ import {
   CollapsibleTrigger,
 } from "@/components/ui/collapsible"
 import {
-  SidebarProvider,
   Sidebar,
   SidebarHeader,
-  SidebarFooter,
   SidebarContent,
   SidebarGroup,
   SidebarGroupLabel,
@@ -23,7 +21,6 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarSeparator,
-  SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { FaHeadSideVirus } from "react-icons/fa"
 
