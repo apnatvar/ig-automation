@@ -184,7 +184,7 @@ export default function ReviewCampaignsCard({
     sortKey !== key ? "none" : sortDir === "asc" ? "ascending" : "descending"
 
   return (
-    <Card className="w-full">
+    <Card className="w-full max-w-[95%] m-5">
       <CardHeader>
         <CardTitle>Review campaigns</CardTitle>
       </CardHeader>

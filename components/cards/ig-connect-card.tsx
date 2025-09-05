@@ -125,7 +125,7 @@ export default function InstagramLoginCard({
               Redirecting to Instagram…
             </>
           ) : (
-            "Sign in with Instagram"
+            "Sign in to Instagram"
           )}
         </Button>
       </CardContent>

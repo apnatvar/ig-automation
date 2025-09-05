@@ -100,6 +100,7 @@ type CampaignAnalytics = {
 
 export default function CampaignCard({
   title = "AB12CD34", // 8-letter/number immutable identifier
+  username = "random-user34",
   word = "launch", // immutable identifier
   message: initialMessage = "Existing campaign message goes here. Edit to update copy, parameters, or notes.",
   analytics: initialAnalytics = {
@@ -113,6 +114,7 @@ export default function CampaignCard({
   onDelete,
 }: {
   title?: string
+  username?: string
   word?: string
   message?: string
   analytics?: CampaignAnalytics
@@ -146,11 +148,12 @@ export default function CampaignCard({
   }
 
   return (
-    <Card className="w-full">
+    <Card className="w-full max-w-[95%] m-5">
       <CardHeader className="flex flex-row items-start justify-between gap-4">
         <div>
           <CardTitle className="text-xl">{title}</CardTitle>
-          <CardDescription className="text-sm text-muted-foreground">{word}</CardDescription>
+          <CardDescription className="text-sm text-muted-foreground">Username: {username}</CardDescription>
+          <CardDescription className="text-sm text-muted-foreground">Campaign Word: {word}</CardDescription>
         </div>
         <div className="flex items-center gap-2">
           {isEditing ? (

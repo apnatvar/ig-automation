@@ -11,6 +11,7 @@ import {
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
+import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa"
 
 export function DataCard() {
   return (
@@ -56,13 +57,13 @@ export function DataCard() {
           Login
         </Button>
         <Button variant="outline" className="w-full">
-          Login with Google
+          Login with <FaFacebook/> Facebook
         </Button>
         <Button variant="outline" className="w-full">
-          Login with Facebook
+          Login with <FaGoogle/> Google
         </Button>
         <Button variant="outline" className="w-full">
-          Login with Apple
+          Login with <FaApple/> Apple
         </Button>
       </CardFooter>
     </Card>
