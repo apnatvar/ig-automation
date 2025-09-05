@@ -4,6 +4,7 @@ import AutoReplyCard from "@/components/cards/interaction-card";
 import SignUpCard from "@/components/cards/signup-card";
 import ReviewCampaignsCard from "@/components/cards/review-campaigns";
 import CampaignCard from "@/components/cards/campaign-card";
+import SocialCampaignsCard from "@/components/cards/all-campaigns-card";
 
 export default function Home() {
   return (
@@ -17,6 +18,7 @@ export default function Home() {
     <CommentsWithKeywordCard/>
     <CommentsRepliedToCard/> */}
     <CampaignCard/>
+    <SocialCampaignsCard/>
     </>
   );
 }

@@ -91,7 +91,7 @@ export default function ReviewCampaignsCard({
   initialRows,
   runEndpoint = (id: string) => `/api/campaigns/${id}/run`,
   deleteEndpoint = (id: string) => `/api/campaigns/${id}`,
-  editHref = (id: string) => `/campaigns/${id}`, // navigate to detailed campaign card/page
+  // editHref = (id: string) => `/campaigns/${id}`, // navigate to detailed campaign card/page
 }: {
   initialRows?: CampaignRow[]
   runEndpoint?: (id: string) => string
@@ -259,7 +259,7 @@ export default function ReviewCampaignsCard({
                     <Button
                       size="sm"
                       variant="outline"
-                      onClick={() => router.push(editHref(row.id))}
+                      onClick={() => router.push("test")}
                       aria-label={`Edit campaign ${row.title}`}
                     >
                       <Pencil className="mr-2 h-4 w-4" />

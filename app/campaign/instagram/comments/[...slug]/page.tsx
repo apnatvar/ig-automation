@@ -1,9 +1,7 @@
 import CampaignCard from "@/components/cards/campaign-card";
 
-export default function Home() {
+export default function Comments() {
   return (
-    <div className="flex">
     <CampaignCard />
-    </div>
   );
 }
