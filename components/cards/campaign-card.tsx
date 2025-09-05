@@ -192,6 +192,7 @@ export default function CampaignCard({
       </CardHeader>
 
       <CardContent className="space-y-6 w-full overflow-x-auto">
+        <Separator />
         {/* Message (editable) */}
         <div className="space-y-2 w-full">
           <div className="text-sm font-medium">Message</div>
@@ -210,7 +211,7 @@ export default function CampaignCard({
         <div className="text-sm text-muted-foreground">Analytics</div>
 
         {/* Small stat cards */}
-        <div className="grid gap-4 grid-cols-1 sm:grid-cols-[1fr_2fr_4fr]">
+        <div className="grid gap-4 sm:grid-cols-[1fr_2fr_2fr]">
           <TotalCommentsCard total={analytics.totalComments}/>
           <CommentsWithKeywordCard
             count={analytics.keywordCount}

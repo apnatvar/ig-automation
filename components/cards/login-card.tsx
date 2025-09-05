@@ -13,7 +13,7 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa"
 
-export function DataCard() {
+export default function LoginCard() {
   return (
     <Card className="w-full max-w-md m-5">
       <CardHeader>
