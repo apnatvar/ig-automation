@@ -5,10 +5,12 @@ import ReviewCampaignsCard from "@/components/cards/review-campaigns";
 import CampaignCard from "@/components/cards/campaign-card";
 import SocialCampaignsCard from "@/components/cards/all-campaigns-card";
 import LoginCard from "@/components/cards/login-card";
+import LandingHero from "@/components/hero";
 
 export default function Home() {
   return (
     <>
+    <LandingHero/>
     <LoginCard/>
     <InstagramLoginCard/>
     <AutoReplyCard/>
