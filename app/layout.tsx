@@ -40,7 +40,6 @@ export default function RootLayout({
           <AppSidebar />
           <main>
             {/* <SplashCursor/> */}
-            <SidebarTrigger className="fixed"/>
             {children}
           </main>
         </SidebarProvider>

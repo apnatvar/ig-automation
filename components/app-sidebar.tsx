@@ -2,7 +2,7 @@
 
 import * as React from "react"
 import Link from "next/link"
-import { ChevronDown, Settings, SlidersHorizontal, Wrench, BarChart3, Folder } from "lucide-react"
+import { ChevronDown, Settings, SlidersHorizontal, Wrench, BarChart3, User } from "lucide-react"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -21,9 +21,11 @@ import {
   SidebarMenuItem,
   SidebarMenuButton,
   SidebarSeparator,
+  SidebarRail,
+  SidebarTrigger,
 } from "@/components/ui/sidebar"
-import { FaHeadSideVirus } from "react-icons/fa"
 import { ThemeToggle } from "./ui/theme-button"
+import { FaCircle, FaFacebook, FaHeadSideVirus, FaInstagram, FaLinkedin, FaXTwitter, FaYoutube } from "react-icons/fa6"
 
 /**
  * App shell using shadcn SidebarProvider.
@@ -43,17 +45,14 @@ function clip8(s: string) {
   return clean.length > 8 ? clean.slice(0, 8) : clean
 }
 
-const MOCK_CAMPAIGNS = [
-  "AlphaX12",
-  "BR4V0Zed",
-  "C9DeltaQ",
-  "Mk77Test",
-  "Zeta0099",
-  "NOVA2025",
-  "Gamma123",
-  "Hawk8X9",
-  "IrisA1B2",
-  "KiloL33T",
+const MOCK_ACCOUNTS = [
+  [ "AlphaX12", "Instagram", ],
+  ["BR4V0Zed", "Facebook",],
+  ["C9DeltaQ", "X",],
+  ["Mk77Test", "X",],
+  ["Zeta0099", "LinkedIn",],
+  ["NOVA2025", "YouTube",],
+  ["Gamma123", "X",],
 ]
 
 export default function AppSidebar() {
@@ -96,12 +95,6 @@ export default function AppSidebar() {
                         <Button variant="ghost" size="sm" className="justify-start">
                           <ThemeToggle/>
                         </Button>
-                        <Button variant="ghost" size="sm" className="justify-start">
-                          Placeholder action B
-                        </Button>
-                        <Button variant="ghost" size="sm" className="justify-start">
-                          Placeholder action C
-                        </Button>
                       </div>
                     </CollapsibleContent>
                   </Collapsible>
@@ -134,15 +127,15 @@ export default function AppSidebar() {
 
         {/* Group 3: Campaigns (scrollable) */}
         <SidebarGroup>
-          <SidebarGroupLabel>Campaigns</SidebarGroupLabel>
+          <SidebarGroupLabel>Connected Accounts</SidebarGroupLabel>
           <SidebarGroupContent>
             <div className="max-h-48 overflow-y-auto rounded-md border">
               <SidebarMenu>
-                {MOCK_CAMPAIGNS.map((title, i) => (
+                {MOCK_ACCOUNTS.map((title, i) => (
                   <SidebarMenuItem key={i}>
                     <SidebarMenuButton>
-                      <Folder className="mr-2 h-4 w-4" />
-                      <span className="font-mono text-xs">{clip8(title)}</span>
+                      {getSocialIcon(title[1])}
+                      <span className="font-mono text-xs">{clip8(title[0])}</span>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}
@@ -163,6 +156,38 @@ export default function AppSidebar() {
       {/* <SidebarFooter className="text-xs text-muted-foreground">
         © 2025 MyWebsite
       </SidebarFooter> */}
+      <SidebarRail />
+      <SidebarTrigger
+        aria-label="Toggle sidebar"
+        className="absolute -right-3 top-3 z-20 h-4 w-4 translate-y-[-50%] rounded-full border bg-background shadow"
+      />
     </Sidebar>
+    
   )
 }
+
+/**
+ * getSocialIcon — returns a JSX icon for a given platform name.
+ * Accepted names: "instagram", "facebook", "linkedin", "youtube", "x", "twitter"
+ * Usage: {getSocialIcon("Instagram", { className: "h-6 w-6" })}
+ */
+function getSocialIcon(
+  name: string,
+) {
+  const key = name.trim().toLowerCase()
+  const Icon =
+    key === "instagram"
+      ? <FaInstagram className="mr-2 h-4 w-4"/>
+      : key === "facebook"
+      ? <FaFacebook className="mr-2 h-4 w-4"/>
+      : key === "linkedin"
+      ? <FaLinkedin className="mr-2 h-4 w-4"/>
+      : key === "youtube"
+      ? <FaYoutube className="mr-2 h-4 w-4"/>
+      : key === "x" || key === "twitter"
+      ? <FaXTwitter className="mr-2 h-4 w-4"/>
+      : <FaCircle className="mr-2 h-4 w-4"/>
+
+  return Icon
+}
+

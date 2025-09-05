@@ -83,14 +83,14 @@ const ORDER: { key: CampaignKey; title: string }[] = [
 export default function SocialCampaignsCard() {
   return (
     // Wrapper: fills remaining space; shrinks/expands with sidebar
-    <div className="flex-1 min-w-0 w-full max-w-[95%] overflow-x-hidden m-6">
+    <div className="flex-1 w-full max-w-[95%] min-w-0 m-auto mt-4 mb-4">
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-xl w-full">Campaign Types</CardTitle>
         </CardHeader>
 
         <CardContent className="space-y-6">
-          <Accordion type="single" collapsible defaultValue="linkedin">
+          <Accordion type="single" collapsible defaultValue="none">
             {ORDER.map((group, idx) => (
               <AccordionItem key={idx} value={group.key}>
                 <AccordionTrigger className="text-base">

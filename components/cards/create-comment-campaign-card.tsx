@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button"
 
 export default function AutoReplyCard() {
   return (
-    <Card className="w-full max-w-md m-5">
+    <Card className="w-full max-w-md min-w-0 m-auto mt-auto">
       <CardHeader>
         <CardTitle>Create Entry</CardTitle>
       </CardHeader>

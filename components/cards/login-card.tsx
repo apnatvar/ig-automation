@@ -15,7 +15,7 @@ import { FaApple, FaFacebook, FaGoogle } from "react-icons/fa"
 
 export default function LoginCard() {
   return (
-    <Card className="w-full max-w-md m-5">
+    <Card className="w-full max-w-md min-w-0 m-auto mt-auto">
       <CardHeader>
         <CardTitle>Login to your account</CardTitle>
         <CardDescription>

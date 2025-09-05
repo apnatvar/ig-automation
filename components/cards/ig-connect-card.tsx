@@ -109,7 +109,7 @@ export default function InstagramLoginCard({
   }
 
   return (
-    <Card className="w-full max-w-md m-5">
+    <Card className="w-full max-w-md min-w-0 m-auto mt-auto">
       <CardHeader>
         <CardTitle className="m-auto scale-200 p-2"><FaInstagram /></CardTitle>
         <CardTitle className="text-center p-4">Connect Instagram</CardTitle>

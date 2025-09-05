@@ -148,7 +148,7 @@ export default function CampaignCard({
   }
 
   return (
-    <Card className="w-full max-w-[95%] m-6 min-w-0">
+    <Card className="w-full max-w-[95%] min-w-0 m-auto mt-4 mb-4">
       <CardHeader className="flex flex-row items-start justify-between gap-4 w-full">
         <div>
           <CardTitle className="text-xl">{title}</CardTitle>

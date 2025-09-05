@@ -130,6 +130,7 @@ body {
 }
 main {
   width: 100vw;
+  /* padding: 1rem; */
 }
 * {
   scrollbar-width: none; 

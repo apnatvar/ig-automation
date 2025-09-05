@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  //config
+  "css.lint.unknownAtRules": "ignore",
 };
 
 export default nextConfig;

@@ -1,4 +1,4 @@
-import CampaignCard from "@/components/cards/campaign-card";
+import CampaignCard from "@/components/cards/ig-comment-campaign-card";
 
 export default function Comments() {
   return (
