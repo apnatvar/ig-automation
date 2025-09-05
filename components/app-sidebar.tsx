@@ -23,6 +23,7 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar"
 import { FaHeadSideVirus } from "react-icons/fa"
+import { ThemeToggle } from "./ui/theme-button"
 
 /**
  * App shell using shadcn SidebarProvider.
@@ -93,7 +94,7 @@ export default function AppSidebar() {
                     <CollapsibleContent className="pl-9 pr-2 pb-2">
                       <div className="flex flex-col gap-1">
                         <Button variant="ghost" size="sm" className="justify-start">
-                          Placeholder action A
+                          <ThemeToggle/>
                         </Button>
                         <Button variant="ghost" size="sm" className="justify-start">
                           Placeholder action B
