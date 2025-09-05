@@ -83,7 +83,7 @@ export function CommentsRepliedToCard({
         <CardTitle className="text-sm font-medium">{label}</CardTitle>
         <CardDescription className="sr-only">{label} breakdown</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-3">
+      <CardContent className="space-y-1">
         <div className="flex items-baseline justify-between">
           <span className="text-xs text-muted-foreground">Total replies</span>
           <span className="text-2xl font-semibold tabular-nums">{nf.format(totalReplies)}</span>

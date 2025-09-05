@@ -148,8 +148,8 @@ export default function CampaignCard({
   }
 
   return (
-    <Card className="w-full max-w-[95%] m-5">
-      <CardHeader className="flex flex-row items-start justify-between gap-4">
+    <Card className="w-full max-w-[95%] m-6 min-w-0">
+      <CardHeader className="flex flex-row items-start justify-between gap-4 w-full">
         <div>
           <CardTitle className="text-xl">{title}</CardTitle>
           <CardDescription className="text-sm text-muted-foreground">Username: {username}</CardDescription>
@@ -191,9 +191,9 @@ export default function CampaignCard({
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-6">
+      <CardContent className="space-y-6 w-full overflow-x-auto">
         {/* Message (editable) */}
-        <div className="space-y-2">
+        <div className="space-y-2 w-full">
           <div className="text-sm font-medium">Message</div>
           <Textarea
             value={message}
@@ -210,8 +210,8 @@ export default function CampaignCard({
         <div className="text-sm text-muted-foreground">Analytics</div>
 
         {/* Small stat cards */}
-        <div className="grid gap-4 sm:grid-cols-3">
-          <TotalCommentsCard total={analytics.totalComments} />
+        <div className="grid gap-4 grid-cols-1 sm:grid-cols-[1fr_2fr_4fr]">
+          <TotalCommentsCard total={analytics.totalComments}/>
           <CommentsWithKeywordCard
             count={analytics.keywordCount}
             total={analytics.totalComments}

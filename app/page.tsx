@@ -3,11 +3,20 @@ import InstagramLoginCard from "@/components/cards/ig-connect-card";
 import AutoReplyCard from "@/components/cards/interaction-card";
 import SignUpCard from "@/components/cards/signup-card";
 import ReviewCampaignsCard from "@/components/cards/review-campaigns";
-import { CommentsRepliedToCard, CommentsWithKeywordCard, TotalCommentsCard } from "@/components/cards/analytics-campaign";
 import CampaignCard from "@/components/cards/campaign-card";
 
 export default function Home() {
   return (
-    <><DataCard/><InstagramLoginCard/><AutoReplyCard/><SignUpCard/><ReviewCampaignsCard/><TotalCommentsCard/><CommentsWithKeywordCard/><CommentsRepliedToCard/><CampaignCard/></>
+    <>
+    <DataCard/>
+    <InstagramLoginCard/>
+    <AutoReplyCard/>
+    <SignUpCard/>
+    <ReviewCampaignsCard/>
+    {/* <TotalCommentsCard/>
+    <CommentsWithKeywordCard/>
+    <CommentsRepliedToCard/> */}
+    <CampaignCard/>
+    </>
   );
 }
