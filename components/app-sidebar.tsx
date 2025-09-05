@@ -25,7 +25,8 @@ import {
   SidebarTrigger,
 } from "@/components/ui/sidebar"
 import { ThemeToggle } from "./ui/theme-button"
-import { FaCircle, FaFacebook, FaHeadSideVirus, FaInstagram, FaLinkedin, FaXTwitter, FaYoutube } from "react-icons/fa6"
+import { FaHeadSideVirus } from "react-icons/fa6"
+import { getSocialIcon } from "@/hooks/get-icon"
 
 /**
  * App shell using shadcn SidebarProvider.
@@ -143,7 +144,7 @@ export default function AppSidebar() {
             </div>
             <div className="mt-2">
               <Button asChild variant="secondary" className="w-full">
-                <Link href="/all-campaigns">View all</Link>
+                <Link href="/connected-accounts">View all</Link>
               </Button>
             </div>
           </SidebarGroupContent>
@@ -154,7 +155,9 @@ export default function AppSidebar() {
 
       {/* Footer */}
       {/* <SidebarFooter className="text-xs text-muted-foreground">
-        © 2025 MyWebsite
+         <SidebarMenuItem>
+          <FaHeadSideVirus className="mr-2 h-4 w-4"/>2025 MyWebsite
+        </SidebarMenuItem>
       </SidebarFooter> */}
       <SidebarRail />
       <SidebarTrigger
@@ -166,28 +169,5 @@ export default function AppSidebar() {
   )
 }
 
-/**
- * getSocialIcon — returns a JSX icon for a given platform name.
- * Accepted names: "instagram", "facebook", "linkedin", "youtube", "x", "twitter"
- * Usage: {getSocialIcon("Instagram", { className: "h-6 w-6" })}
- */
-function getSocialIcon(
-  name: string,
-) {
-  const key = name.trim().toLowerCase()
-  const Icon =
-    key === "instagram"
-      ? <FaInstagram className="mr-2 h-4 w-4"/>
-      : key === "facebook"
-      ? <FaFacebook className="mr-2 h-4 w-4"/>
-      : key === "linkedin"
-      ? <FaLinkedin className="mr-2 h-4 w-4"/>
-      : key === "youtube"
-      ? <FaYoutube className="mr-2 h-4 w-4"/>
-      : key === "x" || key === "twitter"
-      ? <FaXTwitter className="mr-2 h-4 w-4"/>
-      : <FaCircle className="mr-2 h-4 w-4"/>
 
-  return Icon
-}
 

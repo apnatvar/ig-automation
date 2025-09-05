@@ -42,6 +42,7 @@ import {
   Trash2,
   Pencil,
 } from "lucide-react"
+import { ScrollArea, ScrollBar } from "../ui/scroll-area"
 
 type CampaignRow = {
   id: string // stable id for actions
@@ -185,6 +186,7 @@ export default function ReviewCampaignsCard({
 
   return (
     <Card className="w-full max-w-[95%] min-w-0 m-auto mt-4 mb-4">
+      <ScrollArea>
       <CardHeader>
         <CardTitle>Review Campaigns</CardTitle>
       </CardHeader>
@@ -326,6 +328,9 @@ export default function ReviewCampaignsCard({
           </TableBody>
         </Table>
       </CardContent>
+      {/* Horizontal custom scrollbar (visible even if native scrollbars are hidden) */}
+      <ScrollBar orientation="horizontal" />
+      </ScrollArea>
     </Card>
   )
 }
