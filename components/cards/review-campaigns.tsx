@@ -18,11 +18,6 @@ import {
 } from "@/components/ui/table"
 import { Button } from "@/components/ui/button"
 import {
-  HoverCard,
-  HoverCardTrigger,
-  HoverCardContent,
-} from "@/components/ui/hover-card"
-import {
   AlertDialog,
   AlertDialogTrigger,
   AlertDialogContent,
@@ -41,6 +36,8 @@ import {
   Play,
   Trash2,
   Pencil,
+  BarChart2,
+  Link,
 } from "lucide-react"
 import { ScrollArea, ScrollBar } from "../ui/scroll-area"
 
@@ -48,11 +45,10 @@ type CampaignRow = {
   id: string // stable id for actions
   createdAt: Date
   title: string // 8-char alphanumeric
-  word: string
-  message: string
+  type: string
 }
 
-type SortKey = "date" | "title" | "word"
+type SortKey = "date" | "title" | "type"
 type SortDir = "asc" | "desc"
 
 function formatDDMMYYYY(d: Date) {
@@ -70,21 +66,12 @@ function makeMockRows(): CampaignRow[] {
     Array.from({ length: 8 }, () =>
       "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789".charAt(rand(62))
     ).join("")
-  const words = ["alpha", "bravo", "charlie", "delta", "echo", "foxtrot"]
-  const msgs = [
-    "This is a sample campaign message that may be quite long and needs a hover to view fully.",
-    "Second example message with more detailed context. Includes instructions and parameters.",
-    "Another message. Keep in mind preview should be short; full content on hover.",
-    "Launching awareness campaign across multiple channels. Include hashtags and A/B copy.",
-    "Product update announcement slated for rollout. Validate against cohort B.",
-    "Reminder sequence for inactive users. Throttle to avoid rate limits.",
-  ]
+  const types = ["Comment", "Story", "Post", "DM", "Outreach"]
   return Array.from({ length: 8 }, (_, i) => ({
     id: crypto.randomUUID(),
     createdAt: new Date(now - (i + 1) * 86_400_000 - rand(86_400_000)),
     title: randTitle(),
-    word: words[rand(words.length)],
-    message: msgs[rand(msgs.length)] + " ".repeat(rand(40)),
+    type: types[rand(types.length)],
   }))
 }
 
@@ -122,7 +109,7 @@ export default function ReviewCampaignsCard({
       } else if (sortKey === "title") {
         cmp = a.title.localeCompare(b.title)
       } else {
-        cmp = a.word.localeCompare(b.word)
+        cmp = a.type.localeCompare(b.type)
       }
       return sortDir === "asc" ? cmp : -cmp
     })
@@ -215,19 +202,19 @@ export default function ReviewCampaignsCard({
                 </span>
               </TableHead>
               <TableHead
-                aria-sort={ariaSort("word")}
+                aria-sort={ariaSort("type")}
                 className="w-[160px] cursor-pointer select-none"
-                onClick={() => toggleSort("word")}
+                onClick={() => toggleSort("type")}
               >
                 <span className="inline-flex items-center">
-                  Word
-                  <SortIcon active={sortKey === "word"} dir={sortDir} />
+                  Type
+                  <SortIcon active={sortKey === "type"} dir={sortDir} />
                 </span>
               </TableHead>
-              <TableHead>Message</TableHead>
-              <TableHead className="w-[100px] text-right">Edit</TableHead>
-              <TableHead className="w-[110px] text-right">Run</TableHead>
-              <TableHead className="w-[130px] text-right">Delete</TableHead>
+              <TableHead className="min-w-0 max-w-[120px] text-right">Analytics</TableHead>
+              <TableHead className="min-w-0 max-w-[100px] text-right">Edit</TableHead>
+              <TableHead className="min-w-0 max-w-[110px] text-right">Run</TableHead>
+              <TableHead className="min-w-0 max-w-[130px] text-right">Delete</TableHead>
             </TableRow>
           </TableHeader>
 
@@ -240,23 +227,20 @@ export default function ReviewCampaignsCard({
                     {formatDDMMYYYY(row.createdAt)}
                   </TableCell>
                   <TableCell className="font-mono">{row.title}</TableCell>
-                  <TableCell className="capitalize">{row.word}</TableCell>
-
-                  <TableCell className="max-w-[28ch]">
-                    <HoverCard openDelay={100} closeDelay={100}>
-                      <HoverCardTrigger asChild>
-                        <span className="block cursor-help truncate align-top">
-                          {row.message}
-                        </span>
-                      </HoverCardTrigger>
-                      <HoverCardContent className="w-96">
-                        <div className="max-h-64 overflow-auto whitespace-pre-wrap text-sm leading-relaxed">
-                          {row.message}
-                        </div>
-                      </HoverCardContent>
-                    </HoverCard>
-                  </TableCell>
-
+                  <TableCell className="capitalize">{row.type}</TableCell>
+                  <TableCell className="text-right">
+                      { 
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          onClick={() => router.push("analytics")}
+                          aria-label="View analytics"
+                        >
+                          <BarChart2 className="mr-2 h-4 w-4" />
+                          View
+                        </Button>
+                      }
+                    </TableCell>
                   <TableCell className="text-right">
                     <Button
                       size="sm"

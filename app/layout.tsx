@@ -30,6 +30,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <noscript>
+          You need to enable JavaScript to run this app.
+        </noscript>
         <ThemeProvider
           attribute="class"
           defaultTheme="system"

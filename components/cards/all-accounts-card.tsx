@@ -44,8 +44,6 @@ export type ConnectedAccount = {
 
 type Props = {
   accounts?: ConnectedAccount[]
-  /** Your hook/function that maps a platform string -> icon component/element */
-  getIcon?: (platform: string) => React.ReactNode
   /** Called when “View analytics” is clicked (if not using href) */
   onViewAnalytics?: (id: string) => void | Promise<void>
   /** Optional analytics link builder (overrides onViewAnalytics if provided) */
@@ -83,7 +81,6 @@ function makeMock(): ConnectedAccount[] {
 
 export default function ConnectedAccountsCard({
   accounts = makeMock(),
-  getIcon,
   onViewAnalytics,
   analyticsHref,
   onDisconnect,

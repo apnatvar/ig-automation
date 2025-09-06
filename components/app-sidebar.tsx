@@ -150,19 +150,10 @@ export default function AppSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
-
-      <SidebarSeparator />
-
-      {/* Footer */}
-      {/* <SidebarFooter className="text-xs text-muted-foreground">
-         <SidebarMenuItem>
-          <FaHeadSideVirus className="mr-2 h-4 w-4"/>2025 MyWebsite
-        </SidebarMenuItem>
-      </SidebarFooter> */}
       <SidebarRail />
       <SidebarTrigger
         aria-label="Toggle sidebar"
-        className="absolute -right-3 top-3 z-20 h-4 w-4 translate-y-[-50%] rounded-full border bg-background shadow"
+        className="absolute -right-4.5 top-3 z-20 h-4 w-4 translate-y-[-50%] rounded-full border bg-background shadow"
       />
     </Sidebar>
     
