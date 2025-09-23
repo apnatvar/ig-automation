@@ -14,7 +14,6 @@ import { useIsMobile } from "@/hooks/use-mobile";
 
 export default function Home() {
     const isMobile = useIsMobile()
-
   return (
     <>
     {isMobile && <SidebarTrigger />}
@@ -30,6 +29,6 @@ export default function Home() {
     <TotalCommentsCard/>
     <CommentsWithKeywordCard/>
     <CommentsRepliedToCard/>
-    </>
+   </>
   );
 }

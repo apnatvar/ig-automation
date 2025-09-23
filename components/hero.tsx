@@ -36,7 +36,7 @@ export default function LandingHero({
       }
     >
       {/* Backdrop overlay for legibility */}
-      <div className="absolute inset-0 bg-black/50" />
+       <div className="absolute inset-0 bg-black/50" />
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex h-full max-w-6xl flex-col items-center justify-center px-6 text-center text-white">

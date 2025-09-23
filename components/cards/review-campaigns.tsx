@@ -37,7 +37,6 @@ import {
   Trash2,
   Pencil,
   BarChart2,
-  Link,
 } from "lucide-react"
 import { ScrollArea, ScrollBar } from "../ui/scroll-area"
 
