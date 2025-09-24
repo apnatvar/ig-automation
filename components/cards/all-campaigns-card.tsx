@@ -2,12 +2,7 @@
 "use client";
 
 import Link from "next/link";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
   Accordion,
@@ -40,7 +35,11 @@ const CAMPAIGNS = {
   ],
   instagram: [
     { label: "Story", count: 68, href: "/instagram/story" },
-    { label: "Comments", count: 95, href: "/campaign/instagram/comments/review-campaigns" },
+    {
+      label: "Comments",
+      count: 95,
+      href: "/campaign/instagram/comments/review-campaigns",
+    },
     { label: "Outreach", count: 27, href: "/instagram/outreach" },
     { label: "Posts", count: 51, href: "/instagram/posts" },
     { label: "DMs", count: 22, href: "/instagram/dms" },
@@ -83,7 +82,7 @@ const ORDER: { key: CampaignKey; title: string }[] = [
 export default function SocialCampaignsCard() {
   return (
     // Wrapper: fills remaining space; shrinks/expands with sidebar
-    <div className="flex-1 w-full max-w-[95%] min-w-0 m-auto mt-4 mb-4">
+    <div className="flex-1 w-full min-w-0 mx-auto p-4">
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="text-xl w-full">Campaign Types</CardTitle>
