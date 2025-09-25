@@ -33,21 +33,20 @@ export default function UrlToast({
 
   useEffect(() => {
     // Collect possible inputs
-    const connected = searchParams.get("connected"); // success hint
+    const connected = searchParams.get("connectedto");
     const message = searchParams.get(messageParam);
-    const status = (searchParams.get(statusParam) || "").toLowerCase();
-    const platform = searchParams.get(platformParam) || "";
+    const status = searchParams.get(statusParam);
+    const platform = searchParams.get(platformParam);
 
     // Decide what to show
     let variant: "success" | "error" | null = null;
     let text: string | null = null;
 
-    if (connected) {
+    if (status === "success") {
       variant = "success";
       text = `Successfully connected to @${connected} — ${platform}`;
-    } else if (message) {
-      if (status === "success" || status === "ok") variant = "success";
-      else variant = "error";
+    } else {
+      variant = "error";
       text = message;
     }
 
@@ -68,9 +67,10 @@ export default function UrlToast({
     // Optionally clean the URL
     if (clearAfterShow) {
       const params = new URLSearchParams(searchParams.toString());
-      params.delete("connected");
+      params.delete("connectedto");
       params.delete(messageParam);
       params.delete(statusParam);
+      params.delete(platformParam);
 
       const qs = params.toString();
       const cleanUrl = qs ? `${pathname}?${qs}` : pathname;
