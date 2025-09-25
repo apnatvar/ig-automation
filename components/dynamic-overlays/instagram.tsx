@@ -17,19 +17,22 @@ import { Separator } from "@/components/ui/separator";
 import { Skeleton } from "@/components/ui/skeleton";
 
 // Lazy-load your existing login card so it doesn't bloat initial JS.
-const SignUpCard = dynamic(() => import("@/components/cards/signup-card"), {
-  loading: () => <Skeleton className="h-64 w-full" />,
-  ssr: false,
-});
+const InstagramCard = dynamic(
+  () => import("@/components/cards/ig-connect-card"),
+  {
+    loading: () => <Skeleton className="h-64 w-full" />,
+    ssr: false,
+  }
+);
 
-export default function DynamicSignUp() {
+export default function DynamicInstagramLogin() {
   const [open, setOpen] = React.useState(false);
 
   return (
     <section className="p-6">
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button>Sign in</Button>
+          <Button>IG Log in</Button>
         </DialogTrigger>
 
         {/* Dim + blur the backdrop */}
@@ -38,15 +41,15 @@ export default function DynamicSignUp() {
         {/* Keep a fixed shell; only the inner body scrolls */}
         <DialogContent className="sm:max-w-md overflow-hidden p-0">
           <DialogHeader className="px-6 pt-6">
-            <DialogTitle>Welcome</DialogTitle>
-            <DialogDescription>Sign in to continue</DialogDescription>
+            <DialogTitle>Welcome back</DialogTitle>
+            <DialogDescription>Log in to Instagram</DialogDescription>
           </DialogHeader>
 
           <Separator className="mt-4" />
 
           {/* Make ONLY this area scrollable, with a visible custom scrollbar */}
           <ScrollArea className="max-h-[70dvh] px-6 py-4">
-            <SignUpCard />
+            <InstagramCard />
             <ScrollBar orientation="vertical" />
           </ScrollArea>
         </DialogContent>

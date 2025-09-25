@@ -143,12 +143,9 @@ export default function ConnectedAccountsCard({
                   {accounts.map((acc) => (
                     <TableRow key={acc.id}>
                       <TableCell className="whitespace-nowrap">
-                        <div className="flex items-center gap-2">
-                          <span className="inline-flex items-center justify-center rounded-md">
+                        <div className="flex">
+                          <span className="inline-flex mx-auto">
                             {iconFor(acc.platform)}
-                          </span>
-                          <span className="capitalize text-sm text-muted-foreground sr-only">
-                            {acc.platform}
                           </span>
                         </div>
                       </TableCell>

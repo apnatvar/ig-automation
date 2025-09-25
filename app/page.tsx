@@ -17,6 +17,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar";
 import { useIsMobile } from "@/hooks/use-mobile";
 import DynamicLogin from "@/components/dynamic-overlays/login";
 import DynamicSignUp from "@/components/dynamic-overlays/signup";
+import DynamicInstagramLogin from "@/components/dynamic-overlays/instagram";
 
 export default function Home() {
   const isMobile = useIsMobile();
@@ -26,6 +27,7 @@ export default function Home() {
       {isMobile && <SidebarTrigger />}
       <DynamicLogin />
       <DynamicSignUp />
+      <DynamicInstagramLogin />
       <LandingHero />
       <LoginCard />
       <InstagramLoginCard />
