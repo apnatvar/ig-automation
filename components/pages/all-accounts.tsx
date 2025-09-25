@@ -105,7 +105,7 @@ export default function ConnectedAccountsCard({
 
   return (
     <section className="w-full p-4 mx-auto">
-      <Card className="w-full min-w-0 m-auto">
+      <Card className="w-full min-w-0">
         <CardHeader>
           <CardTitle>Connected accounts</CardTitle>
         </CardHeader>

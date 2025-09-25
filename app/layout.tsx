@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/app-sidebar";
 import { ThemeProvider } from "@/components/ui/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+import PillNav from "@/components/pillNav";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -37,13 +37,14 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <SidebarProvider>
-            <AppSidebar />
-            <main>
-              {/* <SplashCursor /> */}
-              {children}
-            </main>
-          </SidebarProvider>
+          <main>
+            <PillNav />
+            <div className="mt-11"></div>{" "}
+            {/* Leaving empty space for the pill nav */}
+            <Toaster richColors closeButton />
+            {/* <SplashCursor /> */}
+            {children}
+          </main>
         </ThemeProvider>
       </body>
     </html>

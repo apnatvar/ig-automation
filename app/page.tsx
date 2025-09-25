@@ -6,8 +6,8 @@ import ReviewCampaignsCard from "@/components/cards/review-campaigns";
 import CampaignCard from "@/components/cards/ig-comment-campaign-card";
 import SocialCampaignsCard from "@/components/cards/all-campaigns-card";
 import LoginCard from "@/components/cards/login-card";
-import LandingHero from "@/components/hero";
-import ConnectedAccountsCard from "@/components/cards/all-accounts-card";
+import LandingHero from "@/components/pages/hero";
+import ConnectedAccountsCard from "@/components/pages/all-accounts";
 import {
   TotalCommentsCard,
   CommentsWithKeywordCard,
