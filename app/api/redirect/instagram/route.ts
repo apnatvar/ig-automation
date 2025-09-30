@@ -2,107 +2,157 @@
 import { NextRequest, NextResponse } from "next/server";
 
 /**
- * ENV you must set:
- *  IG_CLIENT_SECRET       = your Instagram app client secret
- *  PAYLOAD_BASE_URL       = e.g. "https://your-payload.example.com"
- *  PAYLOAD_API_TOKEN      = an admin API token (Bearer) for Payload
- *  PAYLOAD_COLLECTION     = collection slug to store tokens (default: "instagram-tokens")
+ * ENV VARS (set these in your deployment):
+ *  IG_CLIENT_ID         = "990602627938098"          // your app id
+ *  IG_CLIENT_SECRET     = "a1b2C3D4"                 // your app secret
+ *  PAYLOAD_BASE_URL     = "https://your-payload.example.com"
+ *  PAYLOAD_API_TOKEN    = "<payload-admin-api-token>"
+ *  PAYLOAD_COLLECTION   = "instagram-tokens"         // your collection slug
  *
- * Behavior:
- *  - GET /api/redirect/instagram?code=XYZ
- *  - Exchanges code -> long-lived-ish token via:
- *      https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret=...&access_token=CODE
- *  - Stores token result to Payload collection
- *  - Fetches IG profile: https://graph.instagram.com/me?fields=id,username&access_token=...
- *  - Redirects to /campaign/instagram?status=success|error&message=...&connectedto=<username?>
+ * HARD-CODED (per your spec):
+ *  grant_type           = "authorization_code"
+ *  redirect_uri         = "https://myURL/campaign/instagram"
  */
 
+const IG_CLIENT_ID = process.env.IG_CLIENT_ID!;
 const IG_CLIENT_SECRET = process.env.IG_CLIENT_SECRET!;
+
 const PAYLOAD_BASE_URL = process.env.PAYLOAD_BASE_URL!;
 const PAYLOAD_API_TOKEN = process.env.PAYLOAD_API_TOKEN!;
 const PAYLOAD_COLLECTION = process.env.PAYLOAD_COLLECTION || "instagram-tokens";
 
-const REDIRECT_BASE = "/campaign/instagram";
+// Hard-coded as requested
+const OAUTH_REDIRECT_URI = "https://myURL/campaign/instagram";
+
+const ERR_GENERIC =
+  "/connected-accounts?status=error&message=" +
+  encodeURIComponent("Failed to Authenticate");
+
+const ERR_INTERNAL_ENV_MISSING =
+  "/connected-accounts?status=error&message=" +
+  encodeURIComponent("Internal Server Environment Error");
+
+const ERR_SHORT_CODE =
+  "/connected-accounts?status=error&message=" +
+  encodeURIComponent("Failed to Authenticate - Short");
+
+const ERR_LONG_CODE =
+  "/connected-accounts?status=error&message=" +
+  encodeURIComponent("Failed to Authenticate - Long");
+
+const ERR_STORAGE_FAILURE =
+  "/connected-accounts?status=error&message=" +
+  encodeURIComponent("Failed to Store to DB");
+
+const ERR_SUBSCRIPTION_FAILURE =
+  "/connected-accounts?status=error&message=" +
+  encodeURIComponent("Failed to Subscribe to Webhooks");
+
+const ERR_USERDATA =
+  "/connected-accounts?status=error&message=" +
+  encodeURIComponent("Error getting the user data");
 
 export async function GET(req: NextRequest) {
-  const url = new URL(req.url);
-  const code = url.searchParams.get("code") || "";
-
-  if (!code) {
-    return redirectWith(
-      "error",
-      "Authentication was cancelled or unsuccessful",
-      undefined
-    );
-  }
-  if (!IG_CLIENT_SECRET) {
-    return redirectWith("error", "Server missing IG client secret", undefined);
-  }
-  if (!PAYLOAD_BASE_URL || !PAYLOAD_API_TOKEN) {
-    return redirectWith("error", "Server storage not configured", undefined);
-  }
-
   try {
-    // 1) Exchange code => token (as requested: treat code as access_token)
-    const exchangeUrl = new URL("https://graph.instagram.com/access_token");
-    exchangeUrl.searchParams.set("grant_type", "ig_exchange_token");
-    exchangeUrl.searchParams.set("client_secret", IG_CLIENT_SECRET);
-    exchangeUrl.searchParams.set("access_token", code);
+    const url = new URL(req.url);
+    const code = url.searchParams.get("code");
+    if (!code) return NextResponse.redirect(ERR_GENERIC, 302);
 
-    const tokenRes = await fetch(exchangeUrl.toString(), { method: "GET" });
-    const tokenJson = await tokenRes.json();
+    if (!IG_CLIENT_ID || !IG_CLIENT_SECRET)
+      return NextResponse.redirect(ERR_INTERNAL_ENV_MISSING, 302);
+    if (!PAYLOAD_BASE_URL || !PAYLOAD_API_TOKEN)
+      return NextResponse.redirect(ERR_INTERNAL_ENV_MISSING, 302);
 
-    if (!tokenRes.ok || !tokenJson?.access_token) {
-      const msg =
-        (tokenJson &&
-          (tokenJson.error?.message || tokenJson.error?.error_user_msg)) ||
-        "Token exchange errored";
-      return redirectWith("error", msg, undefined);
+    // 1) Exchange code -> access token (authorization_code)
+    // curl -X POST https://api.instagram.com/oauth/access_token \
+    //  -F client_id     -F client_secret -F grant_type=authorization_code
+    //  -F redirect_uri="https://myURL/campaign/instagram" -F code=...
+    const form = new URLSearchParams();
+    form.set("client_id", IG_CLIENT_ID);
+    form.set("client_secret", IG_CLIENT_SECRET);
+    form.set("grant_type", "authorization_code");
+    form.set("redirect_uri", OAUTH_REDIRECT_URI); // must be the same as the OG redirect URL? does that mean IG will send it back here?
+    form.set("code", code);
+
+    const shortResp = await fetch(
+      "https://api.instagram.com/oauth/access_token",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: form.toString(),
+      }
+    );
+
+    if (!shortResp.ok) {
+      return NextResponse.redirect(ERR_SHORT_CODE, 302);
     }
 
-    const { access_token, token_type, expires_in } = tokenJson as {
-      access_token: string;
-      token_type?: string;
-      expires_in?: number;
-    };
+    const shortJson = await safeJson(shortResp);
 
-    // 2) Fetch user profile (id, username)
-    const meUrl = new URL("https://graph.instagram.com/me");
-    meUrl.searchParams.set("fields", "id,username");
-    meUrl.searchParams.set("access_token", access_token);
+    // Your example shows a 'data' array; IG may also return flat JSON.
+    const shortData = Array.isArray(shortJson?.data)
+      ? shortJson.data[0]
+      : shortJson;
+    const shortAccessToken: string | undefined = shortData?.access_token;
+    const appScopedUserId: string | undefined = shortData?.user_id;
 
-    const meRes = await fetch(meUrl.toString(), { method: "GET" });
-    const meJson = await meRes.json();
-    const igUserId: string | undefined = meJson?.id;
-    const igUsername: string | undefined = meJson?.username;
-
-    if (!meRes.ok || !igUserId || !igUsername) {
-      return redirectWith(
-        "error",
-        "Could not fetch Instagram user details",
-        undefined
-      );
+    if (!shortAccessToken) {
+      return NextResponse.redirect(ERR_SHORT_CODE, 302);
     }
 
-    // 3) Store in PayloadCMS
-    //    POST { provider, igUserId, username, token: { access_token, token_type, expires_in, received_at } }
+    // 2) Exchange for long-lived token
+    // GET https://graph.instagram.com/access_token?grant_type=ig_exchange_token&client_secret=...&access_token=...
+    const llUrl = new URL("https://graph.instagram.com/access_token");
+    llUrl.searchParams.set("grant_type", "ig_exchange_token");
+    llUrl.searchParams.set("client_secret", IG_CLIENT_SECRET);
+    llUrl.searchParams.set("access_token", shortAccessToken);
+
+    const longResp = await fetch(llUrl.toString(), { method: "GET" });
+    const longJson = await safeJson(longResp);
+
+    if (!longResp.ok || !longJson?.access_token) {
+      return NextResponse.redirect(ERR_LONG_CODE, 302);
+    }
+
+    const longAccessToken: string = longJson.access_token;
+    const expiresIn: number | null =
+      typeof longJson.expires_in === "number" ? longJson.expires_in : null;
+
+    // 3) Fetch user data (user_id, username)
+    // GET https://graph.instagram.com/v23.0/me?fields=user_id,username&access_token=...
+    const meUrl = new URL("https://graph.instagram.com/v23.0/me");
+    meUrl.searchParams.set("fields", "user_id,username");
+    meUrl.searchParams.set("access_token", longAccessToken);
+
+    const meResp = await fetch(meUrl.toString(), { method: "GET" });
+    const meJson = await safeJson(meResp);
+
+    if (
+      !meResp.ok ||
+      !meJson?.username ||
+      !(meJson?.user_id || appScopedUserId)
+    ) {
+      return NextResponse.redirect(ERR_USERDATA, 302);
+    }
+
+    const igUsername: string = meJson.username;
+    const igUserId: string = meJson.user_id || appScopedUserId || ""; // fallback to app-scoped id if IG returns flat 'id' in some versions
+
+    // 4) Store in PayloadCMS
+    // POST { igUserId, username, access_token, expires_in, provider, created_at }
     const payloadEndpoint = `${trimSlash(
       PAYLOAD_BASE_URL
     )}/api/${encodeURIComponent(PAYLOAD_COLLECTION)}`;
-
     const payloadBody = {
       provider: "instagram",
       igUserId,
       username: igUsername,
-      token: {
-        access_token,
-        token_type: token_type || "bearer",
-        expires_in: typeof expires_in === "number" ? expires_in : null,
-        received_at: new Date().toISOString(),
-      },
+      access_token: longAccessToken,
+      expires_in: expiresIn,
+      created_at: new Date().toISOString(),
     };
 
-    const storeRes = await fetch(payloadEndpoint, {
+    const storeResp = await fetch(payloadEndpoint, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -111,38 +161,49 @@ export async function GET(req: NextRequest) {
       body: JSON.stringify(payloadBody),
     });
 
-    if (!storeRes.ok) {
-      let errMsg = "Failed to store credentials";
-      try {
-        const j = await storeRes.json();
-        errMsg = j?.errors?.[0]?.message || j?.message || errMsg;
-      } catch {}
-      return redirectWith("error", errMsg, undefined);
+    if (!storeResp.ok) {
+      // Storage failure
+      return NextResponse.redirect(ERR_STORAGE_FAILURE, 302);
     }
 
-    // 4) Success redirect
-    return redirectWith("success", "Connected successfully", igUsername);
-  } catch (e) {
-    // TODO why is it not picking up error from next/error?
-    // Answer: typescript does not allow type description for erros in catch blocks
-    console.error(e);
-    return redirectWith("error", "unexpected error", undefined);
+    // 5) Set up subscriptions
+    const subscribeURL = new URL(
+      `$graph.instagram.com/v23.0/me/subscribed_apps`
+    );
+    subscribeURL.searchParams.set(
+      "subscribed_fields",
+      "comments,mentions,messages"
+    );
+    subscribeURL.searchParams.set("access_token", longAccessToken);
+
+    const sub = await fetch(url.toString(), { method: "POST" });
+    const safeSub = await safeJson(sub);
+
+    if (!safeSub.ok) {
+      // Subscription failure
+      return NextResponse.redirect(ERR_SUBSCRIPTION_FAILURE, 302);
+    }
+
+    // 6) Success redirect with params
+    const successUrl =
+      `/campaign/instagram?status=success&message=${encodeURIComponent(
+        "Connected successfully"
+      )}` + `&connectedto=${encodeURIComponent(igUsername)}`;
+
+    return NextResponse.redirect(successUrl, 302);
+  } catch {
+    return NextResponse.redirect(ERR_GENERIC, 302);
   }
 }
 
-function redirectWith(
-  status: "success" | "error",
-  message: string,
-  connectedto?: string
-) {
-  const redirectURL = new URL(REDIRECT_BASE, "http://localhost:3000"); // TODO home needs a string? base won't be used in final string
-  redirectURL.searchParams.set("status", status);
-  redirectURL.searchParams.set("message", message);
-  if (connectedto) {
-    redirectURL.searchParams.set("connectedto", connectedto);
-    redirectURL.searchParams.set("platform", "Instagram");
+/* ------------------------ helpers ------------------------ */
+
+async function safeJson(resp: Response) {
+  try {
+    return await resp.json();
+  } catch {
+    return null as unknown;
   }
-  return NextResponse.redirect(redirectURL, { status: 302 });
 }
 
 function trimSlash(s: string) {
